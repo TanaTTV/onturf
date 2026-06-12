@@ -25,10 +25,10 @@ export default async function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-background/95 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="wordmark text-lg text-white">
+        <Link href="/" className="wordmark shrink-0 text-base text-white sm:text-lg">
           ONTURF
         </Link>
-        <div className="flex items-center gap-5 text-sm lowercase">
+        <div className="flex items-center gap-3 whitespace-nowrap text-xs lowercase sm:gap-5 sm:text-sm">
           <Link href="/shows" className="text-white hover:underline underline-offset-4">
             shows
           </Link>
@@ -45,7 +45,7 @@ export default async function Nav() {
             </Link>
           )}
           {user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <Link href="/settings" className="text-muted hover:text-white">
                 settings
               </Link>

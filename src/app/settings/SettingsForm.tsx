@@ -157,15 +157,30 @@ export default function SettingsForm({ profile }: { profile: Profile }) {
         />
       </div>
 
-      <label className="flex items-center gap-2 lowercase text-white">
-        <input
-          type="checkbox"
-          checked={openToWork}
-          onChange={(e) => setOpenToWork(e.target.checked)}
-          className="h-4 w-4 accent-[var(--white)]"
-        />
-        open to work
-      </label>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={openToWork}
+        onClick={() => setOpenToWork(!openToWork)}
+        className="flex min-h-[56px] w-full items-center justify-between border-y border-hairline py-3 text-left"
+      >
+        <span>
+          <span className="mono-meta flex items-center gap-2 text-white">
+            {openToWork && <span className="signal-dot" aria-hidden />}
+            OPEN TO WORK
+          </span>
+          <span className="mt-1 block text-sm lowercase text-muted">
+            shows a dot on your profile so people know you&apos;re taking gigs
+          </span>
+        </span>
+        <span
+          className={`mono-meta px-4 py-2 transition-colors duration-150 ${
+            openToWork ? "bg-white text-black" : "text-muted"
+          }`}
+        >
+          {openToWork ? "ON" : "OFF"}
+        </span>
+      </button>
 
       <div>
         <span className="label">links</span>
