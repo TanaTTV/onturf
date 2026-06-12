@@ -23,49 +23,54 @@ export default async function Nav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="wordmark text-xl text-white">
+    <header className="sticky top-0 z-50 border-b border-hairline bg-background/95 backdrop-blur">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+        <Link href="/" className="wordmark text-lg text-white">
           ONTURF
         </Link>
-        <div className="flex items-center gap-4 text-sm lowercase">
-          <Link href="/shows" className="text-white hover:text-accent">
+        <div className="flex items-center gap-5 text-sm lowercase">
+          <Link href="/shows" className="text-white hover:underline underline-offset-4">
             shows
           </Link>
-          <Link href="/directory" className="text-white hover:text-accent">
+          <Link href="/directory" className="text-white hover:underline underline-offset-4">
             directory
           </Link>
           {isAdmin && (
-            <Link href="/admin" className="text-accent">
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 text-white hover:underline underline-offset-4"
+            >
+              <span className="signal-dot" aria-hidden />
               admin
             </Link>
           )}
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
+              <Link href="/settings" className="text-muted hover:text-white">
+                settings
+              </Link>
+              <LogoutButton />
               <Link
                 href={username ? `/${username}` : "/onboarding"}
-                className="flex items-center gap-2"
+                className="flex items-center"
+                aria-label="your profile"
               >
                 {avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={avatarUrl}
-                    alt="your profile"
-                    className="h-7 w-7 rounded-full border border-border object-cover"
+                    alt=""
+                    className="h-7 w-7 rounded-full object-cover grayscale"
                   />
                 ) : (
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-xs text-muted">
+                  <span className="mono-meta-xs flex h-7 w-7 items-center justify-center rounded-full border border-hairline text-muted">
                     {(username ?? "?").slice(0, 1)}
                   </span>
                 )}
               </Link>
-              <Link href="/settings" className="text-muted hover:text-white">
-                settings
-              </Link>
-              <LogoutButton />
             </div>
           ) : (
-            <Link href="/login" className="text-accent">
+            <Link href="/login" className="text-white hover:underline underline-offset-4">
               log in
             </Link>
           )}

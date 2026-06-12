@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  /* single accent color — confirm with owner before launch */
-  --accent: #ff3b1f;
-  --muted: #8a8a8a;
-  --surface: #161616;
-  --border: #2a2a2a;
+  --black: #050505; /* page background */
+  --ink: #0d0d0d; /* raised surfaces, barely lighter */
+  --white: #f4f4f2; /* primary text — warm off-white, never pure #fff */
+  --grey-1: #9b9b96; /* secondary text */
+  --grey-2: #3a3a37; /* hairlines, dividers */
+  --bone: #d9d6cf; /* highlight neutral: active states, chips */
+  --signal: #ff3b1f; /* tiny functional signals only — never buttons, never headings */
 }
 
 html {
@@ -17,39 +17,129 @@ html {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--white);
+  background: var(--black);
   font-family: var(--font-body), sans-serif;
+  font-size: 15px;
+}
+
+/* film grain — whole effects budget item #2 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:focus-visible {
+  outline: 1px solid var(--white);
+  outline-offset: 2px;
+}
+
+@keyframes title-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  /* display register — wordmark + page titles */
   .wordmark {
     font-family: var(--font-display), sans-serif;
-    letter-spacing: -0.02em;
     text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+  }
+  /* identifiable from across the room */
+  .title-giant {
+    font-family: var(--font-display), sans-serif;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+    font-size: clamp(4rem, 17vw, 10rem);
+    animation: title-rise 300ms ease-out both;
+  }
+  /* mono metadata register — dates, prices, usernames, role labels */
+  .mono-meta {
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .mono-meta-xs {
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  /* 6px functional signal dot */
+  .signal-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--signal);
+    flex-shrink: 0;
   }
 }
 
 @layer components {
-  .btn-accent {
-    @apply bg-accent text-black font-bold lowercase px-5 py-3 inline-block text-center hover:opacity-90 transition-opacity;
+  /* primary action: inverted block */
+  .btn-primary {
+    @apply inline-block bg-white px-6 py-3 text-center lowercase font-bold text-black transition-opacity hover:opacity-85;
   }
-  .btn-ghost {
-    @apply border border-border text-white lowercase px-5 py-3 inline-block text-center hover:border-white transition-colors;
+  /* secondary action: text only, underline on hover */
+  .btn-text {
+    @apply inline-block lowercase text-white underline-offset-4 hover:underline px-0 py-3;
   }
+  /* underline-only fields */
   .input {
-    @apply w-full bg-surface border border-border px-3 py-2.5 text-white placeholder-muted focus:outline-none focus:border-accent;
+    @apply w-full bg-transparent border-0 border-b border-hairline px-0 py-2.5 text-white placeholder-muted focus:outline-none focus:border-white transition-colors;
   }
   .label {
-    @apply block text-sm lowercase text-muted mb-1;
+    @apply mono-meta block text-muted mb-1.5;
   }
-  .chip {
-    @apply inline-block border border-border px-2 py-0.5 text-xs lowercase;
+  /* ledger row */
+  .row-hover {
+    @apply transition-colors duration-150 hover:bg-ink;
   }
-  .chip-active {
-    @apply border-accent text-accent;
+}
+
+/* marquee strip — effects budget item #3 */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee > div {
+  display: inline-block;
+  animation: marquee-scroll 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee > div {
+    animation: none;
+  }
+  .title-giant {
+    animation: none;
   }
 }

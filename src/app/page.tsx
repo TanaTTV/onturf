@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import ShowCard from "@/components/ShowCard";
-import { TAGLINE } from "@/lib/constants";
+import ShowRow from "@/components/ShowRow";
+import GhostWordmark from "@/components/GhostWordmark";
+import Marquee from "@/components/Marquee";
 import type { ShowWithVenue } from "@/lib/types";
 
 export default async function LandingPage() {
@@ -15,46 +16,55 @@ export default async function LandingPage() {
     .limit(5);
 
   return (
-    <div className="flex flex-col gap-10">
-      <section className="pt-10 text-center">
-        <h1 className="wordmark text-6xl text-white sm:text-8xl">ONTURF</h1>
-        <p className="mt-3 lowercase text-muted">{TAGLINE}</p>
-        <p className="mx-auto mt-2 max-w-md text-sm lowercase text-muted">
-          the albuquerque music scene in one place — shows, artists, producers,
-          engineers, venues.
-        </p>
-        <div className="mt-6 flex justify-center gap-3">
-          <Link href="/shows" className="btn-accent">
-            browse shows
-          </Link>
-          <Link href="/signup" className="btn-ghost">
-            join the directory
-          </Link>
-        </div>
-      </section>
-
-      <section>
-        <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="wordmark text-2xl text-white">next up</h2>
-          <Link href="/shows" className="text-sm lowercase text-accent">
-            all shows →
-          </Link>
-        </div>
-        {shows && shows.length > 0 ? (
-          <div className="flex flex-col gap-2">
-            {(shows as ShowWithVenue[]).map((show) => (
-              <ShowCard key={show.id} show={show} />
-            ))}
-          </div>
-        ) : (
-          <div className="border border-border p-8 text-center lowercase text-muted">
-            no upcoming shows yet.{" "}
-            <Link href="/shows/submit" className="text-accent">
-              submit the first one →
+    <>
+      <GhostWordmark />
+      <div className="relative z-10">
+        {/* hero — pinned left, allowed to clip, dead space on the right */}
+        <section className="pt-16 sm:pt-24">
+          <h1 className="title-giant -ml-1 text-[22vw] text-white sm:-ml-2">
+            ONTURF
+          </h1>
+          <p className="mono-meta mt-6 text-muted">
+            ABQ — LOCAL SHOWS — ARTISTS — PRODUCERS — VENUES
+          </p>
+          <div className="mt-10 flex items-center gap-8">
+            <Link href="/shows" className="btn-primary">
+              browse shows
+            </Link>
+            <Link href="/signup" className="btn-text">
+              join the directory
             </Link>
           </div>
-        )}
-      </section>
-    </div>
+        </section>
+
+        <div className="mt-24 sm:mt-36">
+          <Marquee text="ABQ — FIND SHOWS — GET FOUND — CONNECT" />
+        </div>
+
+        {/* next up — ledger */}
+        <section className="mt-24 sm:mt-36">
+          <div className="mb-6 flex items-baseline justify-between">
+            <h2 className="wordmark text-3xl text-white sm:text-4xl">next up</h2>
+            <Link href="/shows" className="btn-text py-0">
+              all shows
+            </Link>
+          </div>
+          {shows && shows.length > 0 ? (
+            <div className="border-b border-hairline">
+              {(shows as ShowWithVenue[]).map((show) => (
+                <ShowRow key={show.id} show={show} />
+              ))}
+            </div>
+          ) : (
+            <div className="border-y border-hairline py-12">
+              <p className="mono-meta text-muted">NO UPCOMING SHOWS YET</p>
+              <Link href="/shows/submit" className="btn-text mt-2">
+                submit the first one
+              </Link>
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anton, Archivo } from "next/font/google";
+import { Archivo, Archivo_Black, IBM_Plex_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/constants";
 import "./globals.css";
@@ -7,7 +7,7 @@ import "./globals.css";
 // Cloudflare Pages (@cloudflare/next-on-pages) requires edge runtime for SSR routes
 export const runtime = "edge";
 
-const anton = Anton({
+const display = Archivo_Black({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-display",
@@ -16,6 +16,12 @@ const anton = Anton({
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-body",
+});
+
+const mono = IBM_Plex_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -39,14 +45,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${anton.variable} ${archivo.variable} antialiased`}>
+      <body className={`${display.variable} ${archivo.variable} ${mono.variable} antialiased`}>
         <Nav />
-        <main className="mx-auto min-h-[80vh] w-full max-w-5xl px-4 pb-20 pt-6">
+        <main className="mx-auto min-h-[80vh] w-full max-w-6xl px-4 pb-24 pt-6 sm:px-6">
           {children}
         </main>
-        <footer className="border-t border-border px-4 py-8 text-center text-xs lowercase text-muted">
-          <span className="wordmark text-sm text-white">ONTURF</span> · albuquerque, nm ·{" "}
-          {TAGLINE}
+        <footer className="border-t border-hairline px-4 py-6 sm:px-6">
+          <p className="mono-meta-xs text-muted">
+            ONTURF — ALBUQUERQUE NM — FIND SHOWS — GET FOUND
+          </p>
         </footer>
       </body>
     </html>

@@ -9,16 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        accent: "var(--accent)",
-        muted: "var(--muted)",
-        surface: "var(--surface)",
-        border: "var(--border)",
+        background: "var(--black)",
+        ink: "var(--ink)",
+        // warm off-white — overrides tailwind's pure #fff so text-white is never #fff
+        white: "var(--white)",
+        muted: "var(--grey-1)",
+        hairline: "var(--grey-2)",
+        bone: "var(--bone)",
+        signal: "var(--signal)",
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
         body: ["var(--font-body)", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
       },
     },
   },

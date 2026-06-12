@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import ShowCard from "@/components/ShowCard";
+import ShowRow from "@/components/ShowRow";
 import ShowFilters from "./ShowFilters";
 import { formatShowDate } from "@/lib/utils";
 import type { ShowWithVenue } from "@/lib/types";
@@ -49,7 +49,7 @@ export default async function ShowsPage({
   const { data } = await query;
   const shows = (data ?? []) as ShowWithVenue[];
 
-  // group by date for the calendar feel
+  // group by date — ledger sections
   const grouped = new Map<string, ShowWithVenue[]>();
   for (const show of shows) {
     const key = formatShowDate(show.starts_at);
@@ -57,33 +57,33 @@ export default async function ShowsPage({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-baseline justify-between pt-2">
-        <h1 className="wordmark text-3xl text-white">shows</h1>
-        <Link href="/shows/submit" className="btn-accent px-4 py-2 text-sm">
+    <div>
+      <div className="flex flex-wrap items-end justify-between gap-4 pt-10 sm:pt-14">
+        <h1 className="title-giant -ml-1 text-white">shows</h1>
+        <Link href="/shows/submit" className="btn-primary mb-2">
           + submit a show
         </Link>
       </div>
 
-      <ShowFilters />
+      <div className="mt-10">
+        <ShowFilters />
+      </div>
 
       {shows.length === 0 ? (
-        <div className="border border-border p-10 text-center lowercase text-muted">
-          no shows match.{" "}
-          <Link href="/shows/submit" className="text-accent">
-            know one? submit it →
+        <div className="mt-16 border-y border-hairline py-12">
+          <p className="mono-meta text-muted">NO SHOWS MATCH</p>
+          <Link href="/shows/submit" className="btn-text mt-2">
+            know one? submit it
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="mt-16 flex flex-col gap-16 sm:gap-24">
           {Array.from(grouped.entries()).map(([date, dayShows]) => (
             <section key={date}>
-              <h2 className="wordmark mb-2 border-b border-border pb-1 text-lg text-accent">
-                {date.toLowerCase()}
-              </h2>
-              <div className="flex flex-col gap-2">
+              <h2 className="mono-meta mb-4 text-white">{date}</h2>
+              <div className="border-b border-hairline">
                 {dayShows.map((show) => (
-                  <ShowCard key={show.id} show={show} />
+                  <ShowRow key={show.id} show={show} />
                 ))}
               </div>
             </section>
