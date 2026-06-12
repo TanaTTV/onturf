@@ -61,18 +61,25 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   }
 
   return (
-    <div className="mx-auto mt-14 w-full max-w-sm">
-      <h1 className="wordmark mb-10 text-5xl text-white">
+    <div className="mx-auto mt-16 w-full max-w-sm sm:mt-24">
+      <h1 className="wordmark text-6xl text-white sm:text-7xl">
         {mode === "login" ? "log in" : "sign up"}
       </h1>
+      <p className="mono-meta mt-4 text-muted">
+        {mode === "login" ? "BACK ON THE TURF" : "GET ON THE ROSTER — ABQ"}
+      </p>
 
-      <button onClick={handleGoogle} className="btn-primary w-full">
+      <button onClick={handleGoogle} className="btn-primary mt-12 w-full">
         continue with google
       </button>
 
-      <p className="mono-meta-xs my-6 text-muted">OR</p>
+      <div className="my-8 flex items-center gap-4" aria-hidden>
+        <span className="h-px flex-1 bg-hairline" />
+        <span className="mono-meta-xs text-muted">OR</span>
+        <span className="h-px flex-1 bg-hairline" />
+      </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div>
           <label className="label" htmlFor="email">
             EMAIL
@@ -111,22 +118,22 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         )}
         {notice && <p className="mono-meta-xs text-white">{notice}</p>}
 
-        <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
-          {busy ? "…" : mode === "login" ? "log in" : "create account"}
+        <button type="submit" disabled={busy} className="btn-primary mt-2 disabled:opacity-50">
+          {busy ? "…" : mode === "login" ? "log in" : "claim your spot"}
         </button>
       </form>
 
-      <p className="mt-8 text-sm lowercase text-muted">
+      <p className="mt-12 border-t border-hairline pt-6 text-sm lowercase text-muted">
         {mode === "login" ? (
           <>
-            new here?{" "}
+            not on the roster yet?{" "}
             <Link href="/signup" className="text-white underline underline-offset-4">
-              sign up
+              claim your spot
             </Link>
           </>
         ) : (
           <>
-            already on turf?{" "}
+            already on the roster?{" "}
             <Link href="/login" className="text-white underline underline-offset-4">
               log in
             </Link>
