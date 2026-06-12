@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ROLE_LABELS } from "@/lib/constants";
+import ShareCardButton from "@/components/ShareCardButton";
+import { ROLE_LABELS, SITE_URL } from "@/lib/constants";
 import { formatShowDate, formatShowTime, venueLabel } from "@/lib/utils";
 import type { LineupEntry, ShowWithVenue } from "@/lib/types";
 
@@ -46,6 +47,13 @@ export default async function ShowDetailPage({ params }: Props) {
     .order("billing_order");
 
   const isPast = new Date(show.starts_at) < new Date();
+  const denverDay = (d: Date) =>
+    d.toLocaleDateString("en-US", { timeZone: "America/Denver" });
+  const isTonight = denverDay(new Date(show.starts_at)) === denverDay(new Date());
+
+  const lineupNames = ((lineup ?? []) as unknown as LineupEntry[])
+    .map((e) => e.profiles?.display_name)
+    .filter((n): n is string => Boolean(n));
 
   return (
     <article className="mx-auto grid w-full max-w-5xl gap-x-12 gap-y-10 pt-10 sm:grid-cols-[1fr_320px] sm:pt-14">
@@ -77,6 +85,30 @@ export default async function ShowDetailPage({ params }: Props) {
             .filter(Boolean)
             .join(" / ")}
         </p>
+
+        <div className="mt-4">
+          <ShareCardButton
+            kind="show"
+            filename={`onturf-show-${show.id.slice(0, 8)}`}
+            data={{
+              title: show.title,
+              dateLine: `${formatShowDate(show.starts_at)} — ${formatShowTime(show.starts_at)}`,
+              venueLine: [
+                venueLabel(show),
+                show.price_text,
+                show.all_ages ? "all ages" : null,
+              ]
+                .filter(Boolean)
+                .join(" — "),
+              isTonight,
+              city: show.city,
+              flyerUrl: show.flyer_url,
+              lineup: lineupNames,
+              showUrl: `${SITE_URL}/shows/${show.id}`,
+              siteHost: new URL(SITE_URL).host,
+            }}
+          />
+        </div>
 
         {show.ticket_url && (
           <a

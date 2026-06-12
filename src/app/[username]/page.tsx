@@ -6,7 +6,8 @@ import ShowRow from "@/components/ShowRow";
 import GhostWordmark from "@/components/GhostWordmark";
 import EmbedPlayer from "@/components/EmbedPlayer";
 import ConfirmCreditButton from "@/components/ConfirmCreditButton";
-import { ROLE_LABELS } from "@/lib/constants";
+import ShareCardButton from "@/components/ShareCardButton";
+import { ROLE_LABELS, SITE_URL } from "@/lib/constants";
 import type {
   Credit,
   Profile,
@@ -132,11 +133,28 @@ export default async function ProfilePage({ params }: Props) {
             </p>
           )}
 
-          {isOwner && (
-            <Link href="/settings" className="btn-text mt-6 text-muted">
-              edit profile
-            </Link>
-          )}
+          <div className="mt-6 flex items-center gap-6">
+            {isOwner && (
+              <Link href="/settings" className="btn-text py-1 text-muted">
+                edit profile
+              </Link>
+            )}
+            <ShareCardButton
+              kind="profile"
+              filename={`onturf-${profile.username}`}
+              data={{
+                displayName: profile.display_name,
+                username: profile.username,
+                city: profile.city,
+                roles: profile.roles.map((r) => ROLE_LABELS[r]),
+                genres: profile.genres,
+                avatarUrl: profile.avatar_url,
+                foundingMember: profile.founding_member ?? false,
+                profileUrl: `${SITE_URL}/${profile.username}`,
+                siteHost: new URL(SITE_URL).host,
+              }}
+            />
+          </div>
         </section>
 
         {/* links out */}
