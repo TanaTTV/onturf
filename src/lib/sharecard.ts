@@ -2,8 +2,6 @@
  * Client-side share-card renderer. Draws 1080x1920 story cards on a canvas
  * and exports PNG blobs. Follows the v2 token system exactly.
  */
-import qrcode from "qrcode-generator";
-
 const W = 1080;
 const H = 1920;
 const PAD = 64;
@@ -42,6 +40,23 @@ export type ShowCardData = {
 };
 
 type Fonts = { display: string; mono: string };
+
+type QRFactory = (
+  typeNumber: number,
+  errorCorrectionLevel: "L" | "M" | "Q" | "H"
+) => {
+  addData(data: string): void;
+  make(): void;
+  getModuleCount(): number;
+  isDark(row: number, col: number): boolean;
+};
+
+// loaded lazily in the browser only — the UMD build breaks edge-runtime SSR
+async function loadQR(): Promise<QRFactory> {
+  const mod: unknown = await import("qrcode-generator");
+  const m = mod as { default?: QRFactory } & QRFactory;
+  return (m.default ?? m) as QRFactory;
+}
 
 async function loadFonts(): Promise<Fonts> {
   const css = getComputedStyle(document.documentElement);
@@ -232,8 +247,15 @@ function drawSquareImage(
 }
 
 /** White-on-black QR with quiet zone, bottom-right. */
-function drawQR(ctx: CanvasRenderingContext2D, url: string, size: number, x: number, y: number) {
-  const qr = qrcode(0, "M");
+function drawQR(
+  ctx: CanvasRenderingContext2D,
+  qrFactory: QRFactory,
+  url: string,
+  size: number,
+  x: number,
+  y: number
+) {
+  const qr = qrFactory(0, "M");
   qr.addData(url);
   qr.make();
   const count = qr.getModuleCount();
@@ -261,7 +283,8 @@ function drawBrandStamp(
   ctx: CanvasRenderingContext2D,
   fonts: Fonts,
   siteHost: string,
-  url: string
+  url: string,
+  qrFactory: QRFactory
 ) {
   ctx.font = `400 64px ${fonts.display}`;
   ctx.fillStyle = WHITE;
@@ -269,7 +292,7 @@ function drawBrandStamp(
   ctx.fillText("ONTURF", W / 2, H - 130);
   ctx.textAlign = "left";
   drawMono(ctx, siteHost, W / 2, H - 82, 20, GREY_1, fonts);
-  drawQR(ctx, url, 140, W - PAD - 140, H - PAD - 140);
+  drawQR(ctx, qrFactory, url, 140, W - PAD - 140, H - PAD - 140);
 }
 
 function makeCanvas(): { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D } {
@@ -289,7 +312,7 @@ function toBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 }
 
 export async function renderProfileCard(data: ProfileCardData): Promise<Blob> {
-  const fonts = await loadFonts();
+  const [fonts, qrFactory] = await Promise.all([loadFonts(), loadQR()]);
   const avatar = data.avatarUrl ? await loadImage(data.avatarUrl) : null;
   const { canvas, ctx } = makeCanvas();
 
@@ -351,13 +374,13 @@ export async function renderProfileCard(data: ProfileCardData): Promise<Blob> {
     drawMono(ctx, "FOUNDING MEMBER", W / 2, y, 26, BONE, fonts);
   }
 
-  drawBrandStamp(ctx, fonts, data.siteHost, data.profileUrl);
+  drawBrandStamp(ctx, fonts, data.siteHost, data.profileUrl, qrFactory);
   drawGrain(ctx);
   return toBlob(canvas);
 }
 
 export async function renderShowCard(data: ShowCardData): Promise<Blob> {
-  const fonts = await loadFonts();
+  const [fonts, qrFactory] = await Promise.all([loadFonts(), loadQR()]);
   const flyer = data.flyerUrl ? await loadImage(data.flyerUrl) : null;
   const { canvas, ctx } = makeCanvas();
 
@@ -411,7 +434,7 @@ export async function renderShowCard(data: ShowCardData): Promise<Blob> {
     drawMonoWrapped(ctx, names.join(" / "), W / 2, y + 16, 28, WHITE, fonts, W - PAD * 2, 46);
   }
 
-  drawBrandStamp(ctx, fonts, data.siteHost, data.showUrl);
+  drawBrandStamp(ctx, fonts, data.siteHost, data.showUrl, qrFactory);
   drawGrain(ctx);
   return toBlob(canvas);
 }
