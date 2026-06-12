@@ -19,7 +19,7 @@ export default function ConfirmCreditButton({ creditId }: { creditId: string }) 
     <button
       onClick={confirm}
       disabled={busy}
-      className="ml-2 lowercase text-accent underline disabled:opacity-50"
+      className="ml-2 text-white underline underline-offset-4 disabled:opacity-50"
     >
       {busy ? "…" : "confirm"}
     </button>

@@ -51,8 +51,8 @@ export default function AccountSection({ email }: { email: string }) {
   }
 
   return (
-    <section className="border-t border-border pt-8">
-      <h2 className="wordmark mb-3 text-xl text-white">account</h2>
+    <section className="border-t border-hairline pt-8">
+      <h2 className="mono-meta mb-3 text-white">ACCOUNT</h2>
 
       <form onSubmit={updateEmail} className="mb-4 flex gap-2">
         <input
@@ -61,7 +61,7 @@ export default function AccountSection({ email }: { email: string }) {
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
         />
-        <button type="submit" disabled={busy || newEmail === email} className="btn-ghost disabled:opacity-50">
+        <button type="submit" disabled={busy || newEmail === email} className="btn-text disabled:opacity-50">
           update email
         </button>
       </form>
@@ -75,30 +75,30 @@ export default function AccountSection({ email }: { email: string }) {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-        <button type="submit" disabled={busy || !newPassword} className="btn-ghost disabled:opacity-50">
+        <button type="submit" disabled={busy || !newPassword} className="btn-text disabled:opacity-50">
           update password
         </button>
       </form>
 
       {msg && <p className="mb-2 text-sm lowercase text-white">{msg}</p>}
-      {error && <p className="mb-2 text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mb-2 mono-meta-xs text-muted">{error}</p>}
 
-      <div className="mt-6 border border-accent p-4">
+      <div className="mt-6 border border-hairline p-4">
         <p className="mb-2 text-sm lowercase text-muted">
           deleting your account removes your profile, credits, embeds, and lineup tags. shows
           you submitted stay up.
         </p>
         {confirmingDelete ? (
           <div className="flex gap-2">
-            <button onClick={deleteAccount} disabled={busy} className="btn-accent disabled:opacity-50">
+            <button onClick={deleteAccount} disabled={busy} className="btn-primary disabled:opacity-50">
               {busy ? "…" : "yes, delete everything"}
             </button>
-            <button onClick={() => setConfirmingDelete(false)} className="btn-ghost">
+            <button onClick={() => setConfirmingDelete(false)} className="btn-text">
               cancel
             </button>
           </div>
         ) : (
-          <button onClick={() => setConfirmingDelete(true)} className="lowercase text-accent underline">
+          <button onClick={() => setConfirmingDelete(true)} className="lowercase text-muted underline underline-offset-4 hover:text-white">
             delete account
           </button>
         )}

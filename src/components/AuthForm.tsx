@@ -61,23 +61,21 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   }
 
   return (
-    <div className="mx-auto mt-8 w-full max-w-sm">
-      <h1 className="wordmark mb-6 text-3xl text-white">
+    <div className="mx-auto mt-14 w-full max-w-sm">
+      <h1 className="wordmark mb-10 text-5xl text-white">
         {mode === "login" ? "log in" : "sign up"}
       </h1>
 
-      <button onClick={handleGoogle} className="btn-ghost w-full">
+      <button onClick={handleGoogle} className="btn-primary w-full">
         continue with google
       </button>
 
-      <div className="my-4 flex items-center gap-3 text-xs lowercase text-muted">
-        <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
-      </div>
+      <p className="mono-meta-xs my-6 text-muted">OR</p>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
           <label className="label" htmlFor="email">
-            email
+            EMAIL
           </label>
           <input
             id="email"
@@ -91,7 +89,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </div>
         <div>
           <label className="label" htmlFor="password">
-            password
+            PASSWORD
           </label>
           <input
             id="password"
@@ -105,26 +103,31 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
           />
         </div>
 
-        {error && <p className="text-sm lowercase text-accent">{error}</p>}
-        {notice && <p className="text-sm lowercase text-white">{notice}</p>}
+        {error && (
+          <p className="mono-meta-xs flex items-center gap-2 text-muted">
+            <span className="signal-dot" aria-hidden />
+            {error}
+          </p>
+        )}
+        {notice && <p className="mono-meta-xs text-white">{notice}</p>}
 
-        <button type="submit" disabled={busy} className="btn-accent disabled:opacity-50">
+        <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
           {busy ? "…" : mode === "login" ? "log in" : "create account"}
         </button>
       </form>
 
-      <p className="mt-4 text-sm lowercase text-muted">
+      <p className="mt-8 text-sm lowercase text-muted">
         {mode === "login" ? (
           <>
             new here?{" "}
-            <Link href="/signup" className="text-accent">
+            <Link href="/signup" className="text-white underline underline-offset-4">
               sign up
             </Link>
           </>
         ) : (
           <>
             already on turf?{" "}
-            <Link href="/login" className="text-accent">
+            <Link href="/login" className="text-white underline underline-offset-4">
               log in
             </Link>
           </>

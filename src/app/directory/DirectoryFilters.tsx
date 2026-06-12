@@ -26,47 +26,59 @@ function Filters() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
+  const role = params.get("role") ?? "";
+  const genre = params.get("genre") ?? "";
+
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm">
+    <div className="flex flex-col gap-4">
       <input
-        className="input w-full sm:w-56"
+        className="input max-w-sm"
         placeholder="search by name…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <select
-        className="input w-auto py-2"
-        value={params.get("role") ?? ""}
-        onChange={(e) => setParam("role", e.target.value || null)}
-        aria-label="filter by role"
-      >
-        <option value="">all roles</option>
-        {ROLES.filter((r) => r.value !== "fan").map((r) => (
-          <option key={r.value} value={r.value}>
-            {r.label}
-          </option>
-        ))}
-      </select>
-      <select
-        className="input w-auto py-2"
-        value={params.get("genre") ?? ""}
-        onChange={(e) => setParam("genre", e.target.value || null)}
-        aria-label="filter by genre"
-      >
-        <option value="">all genres</option>
-        {GENRES.map((g) => (
-          <option key={g} value={g}>
-            {g}
-          </option>
-        ))}
-      </select>
-      {(params.get("role") || params.get("genre") || params.get("q")) && (
+
+      {/* roles — horizontal text toggles */}
+      <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+        <div className="flex w-max items-center gap-1">
+          {ROLES.filter((r) => r.value !== "fan").map((r) => (
+            <button
+              key={r.value}
+              onClick={() => setParam("role", r.value === role ? null : r.value)}
+              className={`mono-meta min-h-[44px] whitespace-nowrap px-3 transition-colors duration-150 ${
+                role === r.value ? "bg-white text-black" : "text-muted hover:text-white"
+              }`}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* genres — horizontal text toggles */}
+      <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+        <div className="flex w-max items-center gap-1">
+          {GENRES.map((g) => (
+            <button
+              key={g}
+              onClick={() => setParam("genre", g === genre ? null : g)}
+              className={`mono-meta min-h-[44px] whitespace-nowrap px-3 transition-colors duration-150 ${
+                genre === g ? "bg-white text-black" : "text-muted hover:text-white"
+              }`}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {(role || genre || params.get("q")) && (
         <button
           onClick={() => {
             setSearch("");
             router.replace("/directory", { scroll: false });
           }}
-          className="lowercase text-muted underline"
+          className="btn-text self-start py-0 text-muted"
         >
           clear
         </button>

@@ -51,7 +51,7 @@ export default function ProfileSearch({
 
   if (selectedLabel) {
     return (
-      <div className="flex items-center justify-between border border-accent bg-surface px-3 py-2.5 text-sm">
+      <div className="flex items-center justify-between border-b border-white bg-transparent px-3 py-2.5 text-sm">
         <span className="text-white">{selectedLabel}</span>
         {onClear && (
           <button type="button" onClick={onClear} className="lowercase text-muted">
@@ -73,7 +73,7 @@ export default function ProfileSearch({
         onBlur={() => setTimeout(() => setOpen(false), 150)}
       />
       {open && hits.length > 0 && (
-        <ul className="absolute z-10 mt-1 w-full border border-border bg-surface">
+        <ul className="absolute z-10 mt-1 w-full border border-hairline bg-ink">
           {hits.map((p) => (
             <li key={p.id}>
               <button
@@ -89,7 +89,7 @@ export default function ProfileSearch({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.avatar_url} alt="" className="h-6 w-6 rounded-full object-cover" />
                 ) : (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-border text-xs text-muted">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-hairline text-xs text-muted">
                     {p.display_name.slice(0, 1)}
                   </span>
                 )}
@@ -101,7 +101,7 @@ export default function ProfileSearch({
         </ul>
       )}
       {open && hits.length === 0 && query.trim().length >= 2 && (
-        <p className="absolute z-10 mt-1 w-full border border-border bg-surface px-3 py-2 text-sm lowercase text-muted">
+        <p className="absolute z-10 mt-1 w-full border border-hairline bg-ink px-3 py-2 text-sm lowercase text-muted">
           no one found — they can sign up at onturf.com
         </p>
       )}

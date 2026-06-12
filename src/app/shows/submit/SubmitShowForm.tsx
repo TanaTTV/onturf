@@ -114,13 +114,13 @@ export default function SubmitShowForm({
         </label>
         <input id="title" className="input" maxLength={120} {...register("title")} />
         {errors.title && (
-          <p className="mt-1 text-sm lowercase text-accent">{errors.title.message}</p>
+          <p className="mt-1 mono-meta-xs text-muted">{errors.title.message}</p>
         )}
       </div>
 
       <div>
         <span className="label">flyer (jpg/png/webp)</span>
-        <label className="btn-ghost block cursor-pointer text-sm">
+        <label className="btn-text block cursor-pointer text-sm">
           {flyer ? flyer.name : "upload flyer"}
           <input
             type="file"
@@ -131,7 +131,7 @@ export default function SubmitShowForm({
         </label>
         {flyerPreview && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={flyerPreview} alt="flyer preview" className="mt-2 max-h-64 border border-border" />
+          <img src={flyerPreview} alt="flyer preview" className="mt-2 max-h-64 border border-hairline" />
         )}
       </div>
 
@@ -163,7 +163,7 @@ export default function SubmitShowForm({
         </label>
         <input id="starts_at" type="datetime-local" className="input" {...register("starts_at")} />
         {errors.starts_at && (
-          <p className="mt-1 text-sm lowercase text-accent">{errors.starts_at.message}</p>
+          <p className="mt-1 mono-meta-xs text-muted">{errors.starts_at.message}</p>
         )}
       </div>
 
@@ -181,7 +181,7 @@ export default function SubmitShowForm({
           />
         </div>
         <label className="flex items-end gap-2 pb-2.5 lowercase text-white">
-          <input type="checkbox" className="h-4 w-4 accent-[var(--accent)]" {...register("all_ages")} />
+          <input type="checkbox" className="h-4 w-4 accent-[var(--white)]" {...register("all_ages")} />
           all ages
         </label>
       </div>
@@ -208,7 +208,7 @@ export default function SubmitShowForm({
         </label>
         <input id="ticket_url" type="url" inputMode="url" className="input" {...register("ticket_url")} />
         {errors.ticket_url && (
-          <p className="mt-1 text-sm lowercase text-accent">{errors.ticket_url.message}</p>
+          <p className="mt-1 mono-meta-xs text-muted">{errors.ticket_url.message}</p>
         )}
       </div>
 
@@ -223,7 +223,7 @@ export default function SubmitShowForm({
         <span className="label">lineup — tag artists on the bill</span>
         <div className="mb-2 flex flex-col gap-1">
           {lineup.map((p, i) => (
-            <div key={p.id} className="flex items-center gap-2 border border-border bg-surface p-2 text-sm">
+            <div key={p.id} className="flex min-h-[44px] items-center gap-2 border-t border-hairline py-2 text-sm">
               <span className="text-muted">{i + 1}.</span>
               <span className="flex-1 text-white">
                 {p.display_name} <span className="text-muted">@{p.username}</span>
@@ -231,7 +231,7 @@ export default function SubmitShowForm({
               <button
                 type="button"
                 onClick={() => setLineup(lineup.filter((x) => x.id !== p.id))}
-                className="lowercase text-accent"
+                className="lowercase text-muted hover:text-white"
               >
                 remove
               </button>
@@ -246,9 +246,9 @@ export default function SubmitShowForm({
         />
       </div>
 
-      {error && <p className="text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mono-meta-xs text-muted">{error}</p>}
 
-      <button type="submit" disabled={busy} className="btn-accent disabled:opacity-50">
+      <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
         {busy ? "submitting…" : "submit for review"}
       </button>
     </form>

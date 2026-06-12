@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import ShowCard from "@/components/ShowCard";
+import ShowRow from "@/components/ShowRow";
+import GhostWordmark from "@/components/GhostWordmark";
 import EmbedPlayer from "@/components/EmbedPlayer";
 import ConfirmCreditButton from "@/components/ConfirmCreditButton";
 import { ROLE_LABELS } from "@/lib/constants";
@@ -89,180 +90,178 @@ export default async function ProfilePage({ params }: Props) {
   const links = Object.entries(profile.links ?? {}).filter(([, v]) => v);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
-      {/* header */}
-      <section className="flex items-start gap-4 pt-4">
-        {profile.avatar_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={profile.avatar_url}
-            alt={profile.display_name}
-            className="h-24 w-24 shrink-0 rounded-full border border-border object-cover"
-          />
-        ) : (
-          <div className="wordmark flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-border text-3xl text-muted">
-            {profile.display_name.slice(0, 1)}
-          </div>
-        )}
-        <div className="min-w-0">
-          <h1 className="wordmark text-3xl text-white">{profile.display_name}</h1>
-          <p className="text-sm lowercase text-muted">
-            @{profile.username} · {profile.city}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            {profile.roles.map((r) => (
-              <span key={r} className="chip chip-active">
-                {ROLE_LABELS[r]}
-              </span>
-            ))}
-            {profile.open_to_work && (
-              <span className="chip border-white text-white">open to work</span>
+    <>
+      <GhostWordmark />
+      <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-20 sm:gap-28">
+        {/* header */}
+        <section className="pt-10 sm:pt-14">
+          <div className="flex items-end gap-5">
+            {profile.avatar_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatar_url}
+                alt={profile.display_name}
+                className="h-20 w-20 shrink-0 rounded-full object-cover grayscale sm:h-24 sm:w-24"
+              />
             )}
+            <div className="min-w-0">
+              <p className="mono-meta-xs text-muted">
+                @{profile.username} — {profile.city}
+              </p>
+            </div>
           </div>
+          <h1 className="wordmark mt-4 break-words text-[clamp(2.5rem,11vw,5rem)] text-white">
+            {profile.display_name}
+          </h1>
+          <p className="mono-meta mt-4 flex flex-wrap items-center gap-x-2 text-muted">
+            {profile.roles.map((r) => ROLE_LABELS[r]).join(" / ")}
+            {profile.open_to_work && (
+              <span className="flex items-center gap-1.5 text-white">
+                <span className="signal-dot" aria-hidden />
+                open to work
+              </span>
+            )}
+          </p>
           {profile.genres.length > 0 && (
-            <div className="mt-1 flex flex-wrap gap-1">
-              {profile.genres.map((g) => (
-                <span key={g} className="chip">
-                  {g}
-                </span>
+            <p className="mono-meta-xs mt-1.5 text-muted">{profile.genres.join(" / ")}</p>
+          )}
+
+          {profile.bio && (
+            <p className="mt-8 max-w-prose whitespace-pre-line text-sm text-white">
+              {profile.bio}
+            </p>
+          )}
+
+          {isOwner && (
+            <Link href="/settings" className="btn-text mt-6 text-muted">
+              edit profile
+            </Link>
+          )}
+        </section>
+
+        {/* links out */}
+        {links.length > 0 && (
+          <section>
+            <h2 className="mono-meta mb-4 text-white">LINKS</h2>
+            <div className="flex flex-wrap gap-x-8 gap-y-3">
+              {links.map(([key, url]) => (
+                <a
+                  key={key}
+                  href={url as string}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-text py-1"
+                >
+                  {key} ↗
+                </a>
               ))}
             </div>
-          )}
-        </div>
-      </section>
-
-      {profile.bio && <p className="whitespace-pre-line text-sm text-white">{profile.bio}</p>}
-
-      {isOwner && (
-        <Link href="/settings" className="btn-ghost w-full sm:w-auto">
-          edit profile
-        </Link>
-      )}
-
-      {/* links out */}
-      {links.length > 0 && (
-        <section>
-          <h2 className="wordmark mb-2 text-xl text-white">links</h2>
-          <div className="flex flex-wrap gap-2">
-            {links.map(([key, url]) => (
-              <a
-                key={key}
-                href={url as string}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost px-4 py-2 text-sm"
-              >
-                {key} ↗
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* embeds */}
-      {embeds && embeds.length > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="wordmark text-xl text-white">listen / watch</h2>
-          {(embeds as ProfileEmbed[]).map((e) => (
-            <EmbedPlayer key={e.id} url={e.embed_url} />
-          ))}
-        </section>
-      )}
-
-      {/* upcoming shows */}
-      {upcomingShows.length > 0 && (
-        <section>
-          <h2 className="wordmark mb-2 text-xl text-white">upcoming shows</h2>
-          <div className="flex flex-col gap-2">
-            {upcomingShows.map((show) => (
-              <ShowCard key={show.id} show={show} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* worked with */}
-      {((credits && credits.length > 0) || (creditedOn && creditedOn.length > 0)) && (
-        <section>
-          <h2 className="wordmark mb-2 text-xl text-white">worked with</h2>
-          <div className="flex flex-col gap-2">
-            {((credits ?? []) as unknown as CreditWithProfile[]).map((c) => (
-              <div key={c.id} className="border border-border bg-surface p-3 text-sm">
-                <p className="text-white">
-                  {c.work_url ? (
-                    <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline">
-                      {c.work_title}
-                    </a>
-                  ) : (
-                    c.work_title
-                  )}
-                </p>
-                <p className="lowercase text-muted">
-                  {c.role_label}:{" "}
-                  {c.credited ? (
-                    <Link href={`/${c.credited.username}`} className="text-accent">
-                      {c.credited.display_name}
-                    </Link>
-                  ) : (
-                    "unknown"
-                  )}{" "}
-                  {!c.confirmed && <span className="chip ml-1">unconfirmed</span>}
-                </p>
-              </div>
-            ))}
-            {(
-              (creditedOn ?? []) as unknown as (Credit & {
-                owner: Pick<Profile, "username" | "display_name"> | null;
-              })[]
-            ).map((c) => (
-              <div key={c.id} className="border border-border bg-surface p-3 text-sm">
-                <p className="text-white">
-                  {c.work_url ? (
-                    <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline">
-                      {c.work_title}
-                    </a>
-                  ) : (
-                    c.work_title
-                  )}
-                </p>
-                <p className="lowercase text-muted">
-                  {c.role_label} for{" "}
-                  {c.owner ? (
-                    <Link href={`/${c.owner.username}`} className="text-accent">
-                      {c.owner.display_name}
-                    </Link>
-                  ) : (
-                    "unknown"
-                  )}{" "}
-                  {!c.confirmed && <span className="chip ml-1">unconfirmed</span>}
-                  {!c.confirmed && user?.id === profile.id && (
-                    <ConfirmCreditButton creditId={c.id} />
-                  )}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* empty state for brand-new profiles */}
-      {!profile.bio &&
-        links.length === 0 &&
-        (!embeds || embeds.length === 0) &&
-        upcomingShows.length === 0 && (
-          <div className="border border-border p-8 text-center lowercase text-muted">
-            {isOwner ? (
-              <>
-                your profile is bare.{" "}
-                <Link href="/settings" className="text-accent">
-                  add a bio, links, and music →
-                </Link>
-              </>
-            ) : (
-              <>nothing here yet.</>
-            )}
-          </div>
+          </section>
         )}
-    </div>
+
+        {/* embeds — single quiet column */}
+        {embeds && embeds.length > 0 && (
+          <section className="flex flex-col gap-4">
+            <h2 className="mono-meta text-white">LISTEN / WATCH</h2>
+            {(embeds as ProfileEmbed[]).map((e) => (
+              <EmbedPlayer key={e.id} url={e.embed_url} />
+            ))}
+          </section>
+        )}
+
+        {/* upcoming shows */}
+        {upcomingShows.length > 0 && (
+          <section>
+            <h2 className="mono-meta mb-4 text-white">UPCOMING SHOWS</h2>
+            <div className="border-b border-hairline">
+              {upcomingShows.map((show) => (
+                <ShowRow key={show.id} show={show} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* worked with */}
+        {((credits && credits.length > 0) || (creditedOn && creditedOn.length > 0)) && (
+          <section>
+            <h2 className="mono-meta mb-4 text-white">WORKED WITH</h2>
+            <div className="border-b border-hairline">
+              {((credits ?? []) as unknown as CreditWithProfile[]).map((c) => (
+                <div key={c.id} className="border-t border-hairline py-3 text-sm">
+                  <p className="font-bold text-white">
+                    {c.work_url ? (
+                      <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
+                        {c.work_title}
+                      </a>
+                    ) : (
+                      c.work_title
+                    )}
+                  </p>
+                  <p className="mono-meta-xs mt-1 text-muted">
+                    {c.role_label} —{" "}
+                    {c.credited ? (
+                      <Link href={`/${c.credited.username}`} className="text-white underline-offset-4 hover:underline">
+                        {c.credited.display_name}
+                      </Link>
+                    ) : (
+                      "unknown"
+                    )}
+                    {!c.confirmed && " — unconfirmed"}
+                  </p>
+                </div>
+              ))}
+              {(
+                (creditedOn ?? []) as unknown as (Credit & {
+                  owner: Pick<Profile, "username" | "display_name"> | null;
+                })[]
+              ).map((c) => (
+                <div key={c.id} className="border-t border-hairline py-3 text-sm">
+                  <p className="font-bold text-white">
+                    {c.work_url ? (
+                      <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
+                        {c.work_title}
+                      </a>
+                    ) : (
+                      c.work_title
+                    )}
+                  </p>
+                  <p className="mono-meta-xs mt-1 text-muted">
+                    {c.role_label} for{" "}
+                    {c.owner ? (
+                      <Link href={`/${c.owner.username}`} className="text-white underline-offset-4 hover:underline">
+                        {c.owner.display_name}
+                      </Link>
+                    ) : (
+                      "unknown"
+                    )}
+                    {!c.confirmed && " — unconfirmed"}
+                    {!c.confirmed && user?.id === profile.id && (
+                      <ConfirmCreditButton creditId={c.id} />
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* empty state for brand-new profiles */}
+        {!profile.bio &&
+          links.length === 0 &&
+          (!embeds || embeds.length === 0) &&
+          upcomingShows.length === 0 && (
+            <div className="border-y border-hairline py-12">
+              <p className="mono-meta text-muted">
+                {isOwner ? "YOUR PROFILE IS BARE" : "NOTHING HERE YET"}
+              </p>
+              {isOwner && (
+                <Link href="/settings" className="btn-text mt-2">
+                  add a bio, links, and music
+                </Link>
+              )}
+            </div>
+          )}
+      </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -82,7 +82,7 @@ export default function OnboardingWizard({
       <p className="mb-1 text-xs lowercase text-muted">step {step} of 3</p>
       <div className="mb-6 flex gap-1">
         {[1, 2, 3].map((s) => (
-          <div key={s} className={`h-1 flex-1 ${s <= step ? "bg-accent" : "bg-border"}`} />
+          <div key={s} className={`h-1 flex-1 ${s <= step ? "bg-white" : "bg-hairline"}`} />
         ))}
       </div>
 
@@ -96,7 +96,7 @@ export default function OnboardingWizard({
             onToggle={(v) => toggle(roles, setRoles, v)}
           />
           <button
-            className="btn-accent mt-6 w-full disabled:opacity-50"
+            className="btn-primary mt-6 w-full disabled:opacity-50"
             disabled={roles.length === 0}
             onClick={() => setStep(2)}
           >
@@ -126,7 +126,7 @@ export default function OnboardingWizard({
               username
             </label>
             <div className="flex items-center">
-              <span className="border border-r-0 border-border bg-surface px-3 py-2.5 text-muted">
+              <span className="border-b border-hairline py-2.5 pr-1 text-muted">
                 onturf.com/
               </span>
               <input
@@ -150,17 +150,17 @@ export default function OnboardingWizard({
               />
             </div>
           )}
-          {error && <p className="text-sm lowercase text-accent">{error}</p>}
+          {error && <p className="mono-meta-xs text-muted">{error}</p>}
           <div className="flex gap-2">
-            <button className="btn-ghost flex-1" onClick={() => setStep(1)}>
+            <button className="btn-text flex-1" onClick={() => setStep(1)}>
               back
             </button>
             {fanOnly ? (
-              <button className="btn-accent flex-1 disabled:opacity-50" disabled={busy} onClick={() => save(false)}>
+              <button className="btn-primary flex-1 disabled:opacity-50" disabled={busy} onClick={() => save(false)}>
                 {busy ? "…" : "finish"}
               </button>
             ) : (
-              <button className="btn-accent flex-1" onClick={() => setStep(3)}>
+              <button className="btn-primary flex-1" onClick={() => setStep(3)}>
                 next
               </button>
             )}
@@ -190,13 +190,13 @@ export default function OnboardingWizard({
               />
             </div>
           ))}
-          {error && <p className="text-sm lowercase text-accent">{error}</p>}
+          {error && <p className="mono-meta-xs text-muted">{error}</p>}
           <div className="flex gap-2">
-            <button className="btn-ghost flex-1" onClick={() => setStep(2)}>
+            <button className="btn-text flex-1" onClick={() => setStep(2)}>
               back
             </button>
             <button
-              className="btn-accent flex-1 disabled:opacity-50"
+              className="btn-primary flex-1 disabled:opacity-50"
               disabled={busy}
               onClick={() => save(true)}
             >

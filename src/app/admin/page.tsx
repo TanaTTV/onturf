@@ -29,12 +29,11 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-8">
-      <h1 className="wordmark pt-2 text-3xl text-white">admin</h1>
+      <h1 className="wordmark pt-10 text-5xl text-white sm:text-6xl">admin</h1>
 
       <section>
-        <h2 className="wordmark mb-3 text-xl text-white">
-          pending shows{" "}
-          <span className="text-accent">({pending?.length ?? 0})</span>
+        <h2 className="mono-meta mb-4 text-white">
+          PENDING SHOWS ({pending?.length ?? 0})
         </h2>
         {pending && pending.length > 0 ? (
           <div className="flex flex-col gap-3">
@@ -43,8 +42,8 @@ export default async function AdminPage() {
             ))}
           </div>
         ) : (
-          <p className="border border-border p-6 text-center lowercase text-muted">
-            queue is clear. nice.
+          <p className="mono-meta border-y border-hairline py-10 text-muted">
+            QUEUE IS CLEAR
           </p>
         )}
       </section>

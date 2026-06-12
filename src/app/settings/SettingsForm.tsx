@@ -87,7 +87,7 @@ export default function SettingsForm({ profile }: { profile: Profile }) {
 
   return (
     <form onSubmit={save} className="flex flex-col gap-5">
-      <h2 className="wordmark text-xl text-white">profile</h2>
+      <h2 className="mono-meta text-white">PROFILE</h2>
 
       <div className="flex items-center gap-4">
         {avatarUrl ? (
@@ -95,14 +95,14 @@ export default function SettingsForm({ profile }: { profile: Profile }) {
           <img
             src={avatarUrl}
             alt="avatar"
-            className="h-20 w-20 rounded-full border border-border object-cover"
+            className="h-20 w-20 rounded-full border border-hairline object-cover"
           />
         ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-border text-muted">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-hairline text-muted">
             —
           </div>
         )}
-        <label className="btn-ghost cursor-pointer text-sm">
+        <label className="btn-text cursor-pointer text-sm">
           {busy ? "…" : "change photo"}
           <input
             type="file"
@@ -162,7 +162,7 @@ export default function SettingsForm({ profile }: { profile: Profile }) {
           type="checkbox"
           checked={openToWork}
           onChange={(e) => setOpenToWork(e.target.checked)}
-          className="h-4 w-4 accent-[var(--accent)]"
+          className="h-4 w-4 accent-[var(--white)]"
         />
         open to work
       </label>
@@ -184,10 +184,10 @@ export default function SettingsForm({ profile }: { profile: Profile }) {
         </div>
       </div>
 
-      {error && <p className="text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mono-meta-xs text-muted">{error}</p>}
       {saved && <p className="text-sm lowercase text-white">saved.</p>}
 
-      <button type="submit" disabled={busy} className="btn-accent disabled:opacity-50">
+      <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
         {busy ? "…" : "save profile"}
       </button>
     </form>

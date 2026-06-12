@@ -25,14 +25,14 @@ export default function PendingShowCard({ show }: { show: ShowWithVenue }) {
   }
 
   return (
-    <div className="border border-border bg-surface p-3">
+    <div className="border border-hairline bg-ink p-3">
       <div className="flex gap-3">
         {show.flyer_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={show.flyer_url} alt="" className="h-24 w-20 shrink-0 object-cover" />
         )}
         <div className="min-w-0 flex-1">
-          <p className="text-xs lowercase text-accent">
+          <p className="mono-meta-xs text-muted">
             {formatShowDate(show.starts_at)} · {formatShowTime(show.starts_at)}
           </p>
           <Link href={`/shows/${show.id}`} className="font-bold text-white underline">
@@ -52,19 +52,19 @@ export default function PendingShowCard({ show }: { show: ShowWithVenue }) {
         <button
           onClick={() => setStatus("approved")}
           disabled={busy}
-          className="btn-accent flex-1 py-3 disabled:opacity-50"
+          className="btn-primary flex-1 py-3 disabled:opacity-50"
         >
           approve
         </button>
         <button
           onClick={() => setStatus("rejected")}
           disabled={busy}
-          className="btn-ghost flex-1 py-3 disabled:opacity-50"
+          className="btn-text flex-1 py-3 disabled:opacity-50"
         >
           reject
         </button>
       </div>
-      {error && <p className="mt-2 text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mt-2 mono-meta-xs text-muted">{error}</p>}
     </div>
   );
 }

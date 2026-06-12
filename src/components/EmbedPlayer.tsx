@@ -8,7 +8,7 @@ export default function EmbedPlayer({ url }: { url: string }) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block truncate border border-border p-3 text-sm text-accent"
+        className="block truncate border border-hairline p-3 text-sm text-white"
       >
         {url} ↗
       </a>

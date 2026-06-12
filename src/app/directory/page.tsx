@@ -40,44 +40,46 @@ export default async function DirectoryPage({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="wordmark pt-2 text-3xl text-white">directory</h1>
-      <DirectoryFilters />
+    <div>
+      <h1 className="title-giant -ml-1 pt-10 text-white sm:pt-14">directory</h1>
+
+      <div className="mt-10">
+        <DirectoryFilters />
+      </div>
 
       {profiles.length === 0 ? (
-        <div className="border border-border p-10 text-center lowercase text-muted">
-          no one matches.{" "}
-          <Link href="/signup" className="text-accent">
-            be the first →
+        <div className="mt-16 border-y border-hairline py-12">
+          <p className="mono-meta text-muted">NO ONE MATCHES</p>
+          <Link href="/signup" className="btn-text mt-2">
+            be the first
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="mt-16 grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-4">
           {profiles.map((p) => (
-            <Link
-              key={p.id}
-              href={`/${p.username}`}
-              className="flex flex-col items-center gap-2 border border-border bg-surface p-4 text-center transition-colors hover:border-accent"
-            >
+            <Link key={p.id} href={`/${p.username}`} className="group min-w-0">
               {p.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={p.avatar_url}
                   alt={p.display_name}
-                  className="h-16 w-16 rounded-full object-cover"
+                  className="aspect-square w-full object-cover grayscale transition-[filter] duration-150 group-hover:grayscale-0"
                   loading="lazy"
                 />
               ) : (
-                <span className="wordmark flex h-16 w-16 items-center justify-center rounded-full border border-border text-xl text-muted">
+                <div className="wordmark flex aspect-square w-full items-center justify-center bg-ink text-4xl text-hairline">
                   {p.display_name.slice(0, 1)}
-                </span>
+                </div>
               )}
-              <span className="w-full truncate font-bold text-white">{p.display_name}</span>
-              <span className="text-xs lowercase text-muted">
-                {p.roles.map((r) => ROLE_LABELS[r as UserRole]).join(" · ")}
-              </span>
+              <p className="mt-3 truncate font-bold text-white">{p.display_name}</p>
+              <p className="mono-meta-xs mt-1 truncate text-muted">
+                {p.roles.map((r) => ROLE_LABELS[r as UserRole]).join(" / ")}
+              </p>
               {p.open_to_work && (
-                <span className="chip chip-active">open to work</span>
+                <p className="mono-meta-xs mt-1 flex items-center gap-1.5 text-white">
+                  <span className="signal-dot" aria-hidden />
+                  open to work
+                </p>
               )}
             </Link>
           ))}

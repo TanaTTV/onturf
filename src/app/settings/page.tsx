@@ -38,7 +38,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-10">
-      <h1 className="wordmark pt-4 text-3xl text-white">settings</h1>
+      <h1 className="wordmark pt-10 text-5xl text-white sm:text-6xl">settings</h1>
       <SettingsForm profile={profile as Profile} />
       <EmbedsManager embeds={(embeds ?? []) as ProfileEmbed[]} userId={user.id} />
       <CreditsManager

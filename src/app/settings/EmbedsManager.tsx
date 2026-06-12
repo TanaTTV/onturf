@@ -43,17 +43,17 @@ export default function EmbedsManager({
   }
 
   return (
-    <section className="border-t border-border pt-8">
-      <h2 className="wordmark mb-2 text-xl text-white">music & video embeds</h2>
+    <section className="border-t border-hairline pt-8">
+      <h2 className="mono-meta mb-2 text-white">MUSIC & VIDEO EMBEDS</h2>
       <p className="mb-3 text-sm lowercase text-muted">
         paste a spotify, soundcloud, or youtube link — it renders as a player on your profile.
       </p>
 
       <div className="flex flex-col gap-2">
         {embeds.map((e) => (
-          <div key={e.id} className="flex items-center gap-2 border border-border bg-surface p-2 text-sm">
+          <div key={e.id} className="flex min-h-[44px] items-center gap-2 border-t border-hairline py-2 text-sm">
             <span className="min-w-0 flex-1 truncate text-muted">{e.embed_url}</span>
-            <button onClick={() => remove(e.id)} className="lowercase text-accent">
+            <button onClick={() => remove(e.id)} className="lowercase text-muted hover:text-white">
               remove
             </button>
           </div>
@@ -72,11 +72,11 @@ export default function EmbedsManager({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <button type="submit" disabled={busy} className="btn-accent disabled:opacity-50">
+        <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
           add
         </button>
       </form>
-      {error && <p className="mt-2 text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mt-2 mono-meta-xs text-muted">{error}</p>}
     </section>
   );
 }

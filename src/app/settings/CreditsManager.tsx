@@ -64,8 +64,8 @@ export default function CreditsManager({
   }
 
   return (
-    <section className="border-t border-border pt-8">
-      <h2 className="wordmark mb-2 text-xl text-white">worked with</h2>
+    <section className="border-t border-hairline pt-8">
+      <h2 className="mono-meta mb-2 text-white">WORKED WITH</h2>
       <p className="mb-3 text-sm lowercase text-muted">
         credit people you&apos;ve worked with on tracks or projects. they can confirm it from
         their profile.
@@ -73,7 +73,7 @@ export default function CreditsManager({
 
       <div className="flex flex-col gap-2">
         {credits.map((c) => (
-          <div key={c.id} className="flex items-center gap-2 border border-border bg-surface p-2 text-sm">
+          <div key={c.id} className="flex min-h-[44px] items-center gap-2 border-t border-hairline py-2 text-sm">
             <span className="min-w-0 flex-1 truncate text-white">
               {c.work_title}{" "}
               <span className="lowercase text-muted">
@@ -81,7 +81,7 @@ export default function CreditsManager({
                 {c.confirmed ? "✓" : "(unconfirmed)"}
               </span>
             </span>
-            <button onClick={() => remove(c.id)} className="lowercase text-accent">
+            <button onClick={() => remove(c.id)} className="lowercase text-muted hover:text-white">
               remove
             </button>
           </div>
@@ -125,8 +125,8 @@ export default function CreditsManager({
           value={workUrl}
           onChange={(e) => setWorkUrl(e.target.value)}
         />
-        {error && <p className="text-sm lowercase text-accent">{error}</p>}
-        <button type="submit" disabled={busy} className="btn-accent disabled:opacity-50">
+        {error && <p className="mono-meta-xs text-muted">{error}</p>}
+        <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
           {busy ? "…" : "add credit"}
         </button>
       </form>

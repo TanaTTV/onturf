@@ -27,8 +27,8 @@ export default async function SubmitShowPage() {
 
   return (
     <div className="mx-auto w-full max-w-xl">
-      <h1 className="wordmark pt-2 text-3xl text-white">submit a show</h1>
-      <p className="mb-6 mt-1 text-sm lowercase text-muted">
+      <h1 className="wordmark pt-10 text-5xl text-white sm:text-6xl">submit a show</h1>
+      <p className="mb-10 mt-3 text-sm lowercase text-muted">
         shows go live after a quick review — usually same day.
       </p>
       <SubmitShowForm userId={user.id} venues={(venues ?? []) as Venue[]} />

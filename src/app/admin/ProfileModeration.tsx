@@ -30,8 +30,8 @@ export default function ProfileModeration() {
   }
 
   return (
-    <section className="border-t border-border pt-6">
-      <h2 className="wordmark mb-3 text-xl text-white">profile moderation</h2>
+    <section className="border-t border-hairline pt-6">
+      <h2 className="mono-meta mb-3 text-white">PROFILE MODERATION</h2>
       <p className="mb-3 text-sm lowercase text-muted">
         search a profile to remove spam. deleting a profile removes their credits, embeds, and
         lineup tags.
@@ -53,13 +53,13 @@ export default function ProfileModeration() {
           <button
             onClick={deleteProfile}
             disabled={busy}
-            className="btn-accent disabled:opacity-50"
+            className="btn-primary disabled:opacity-50"
           >
             {busy ? "…" : "delete profile"}
           </button>
         </div>
       )}
-      {error && <p className="mt-2 text-sm lowercase text-accent">{error}</p>}
+      {error && <p className="mt-2 mono-meta-xs text-muted">{error}</p>}
       {done && <p className="mt-2 text-sm lowercase text-white">{done}</p>}
     </section>
   );

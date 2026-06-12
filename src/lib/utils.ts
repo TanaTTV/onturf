@@ -43,7 +43,7 @@ export function toEmbedSrc(raw: string): { src: string; height: number } | null 
 
     if (host === "soundcloud.com" || host === "on.soundcloud.com") {
       return {
-        src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(raw)}&color=%23ff3b1f&auto_play=false&show_comments=false`,
+        src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(raw)}&color=%23d9d6cf&auto_play=false&show_comments=false`,
         height: 166,
       };
     }
