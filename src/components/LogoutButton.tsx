@@ -13,7 +13,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <button onClick={logout} className="lowercase text-muted hover:text-white">
+    <button onClick={logout} className="lowercase text-white hover:underline underline-offset-4">
       log out
     </button>
   );

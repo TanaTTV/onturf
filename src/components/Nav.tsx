@@ -46,7 +46,7 @@ export default async function Nav() {
           )}
           {user ? (
             <div className="flex items-center gap-3 sm:gap-4">
-              <Link href="/settings" className="text-muted hover:text-white">
+              <Link href="/settings" className="text-white hover:underline underline-offset-4">
                 settings
               </Link>
               <LogoutButton />
