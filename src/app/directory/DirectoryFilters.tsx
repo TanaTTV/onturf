@@ -39,7 +39,7 @@ function Filters() {
       />
 
       {/* roles — horizontal text toggles */}
-      <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+      <div className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
         <div className="flex w-max items-center gap-1">
           {ROLES.filter((r) => r.value !== "fan").map((r) => (
             <button
@@ -56,7 +56,7 @@ function Filters() {
       </div>
 
       {/* genres — horizontal text toggles */}
-      <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+      <div className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
         <div className="flex w-max items-center gap-1">
           {GENRES.map((g) => (
             <button

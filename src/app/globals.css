@@ -14,6 +14,27 @@
 
 html {
   color-scheme: dark;
+  /* firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-2) var(--black);
+}
+
+/* slim monochrome scrollbar — chrome/edge/safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--grey-2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey-1);
+}
+::-webkit-scrollbar-corner {
+  background: var(--black);
 }
 
 body {
@@ -91,6 +112,14 @@ body::after {
     text-transform: uppercase;
     font-size: 10px;
     letter-spacing: 0.1em;
+  }
+  /* hide scrollbars on horizontal toggle strips */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
   /* 6px functional signal dot */
   .signal-dot {

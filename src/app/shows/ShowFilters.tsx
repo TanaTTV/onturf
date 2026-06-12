@@ -22,7 +22,7 @@ function Filters() {
   return (
     <div className="flex flex-col gap-4">
       {/* horizontal scrolling text toggles */}
-      <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+      <div className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
         <div className="flex w-max items-center gap-1">
           <button
             onClick={() => setParam("genre", null)}
