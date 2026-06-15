@@ -25,6 +25,22 @@ export function venueLabel(show: ShowWithVenue): string {
   return show.venues?.name ?? show.venue_name_freetext ?? "venue tba";
 }
 
+/**
+ * Return the URL only if it's a safe http(s) link, else null. Guards against
+ * stored XSS — a user can write arbitrary strings into their links jsonb via
+ * the API (they own the row), so `javascript:`/`data:` URLs must never reach
+ * an href that other people click.
+ */
+export function safeExternalUrl(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  try {
+    const u = new URL(raw.trim());
+    return u.protocol === "http:" || u.protocol === "https:" ? u.href : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Convert a raw spotify/soundcloud/youtube URL into an iframe embed src, or null if unsupported. */
 export function toEmbedSrc(raw: string): { src: string; height: number } | null {
   try {
