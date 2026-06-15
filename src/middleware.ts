@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const authRequired = ["/shows/submit", "/settings", "/onboarding", "/admin"];
+  const authRequired = ["/shows/submit", "/settings", "/onboarding", "/admin", "/following"];
   if (!user && authRequired.some((p) => pathname.startsWith(p))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

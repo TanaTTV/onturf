@@ -46,6 +46,9 @@ export default async function Nav() {
           )}
           {user ? (
             <div className="flex items-center gap-3 sm:gap-4">
+              <Link href="/following" className="text-white hover:underline underline-offset-4">
+                following
+              </Link>
               <Link href="/settings" className="text-white hover:underline underline-offset-4">
                 settings
               </Link>
