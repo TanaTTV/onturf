@@ -29,6 +29,20 @@ export default function ProfileModeration() {
     router.refresh();
   }
 
+  async function setFounding(value: boolean) {
+    if (!selected) return;
+    setBusy(true);
+    setError(null);
+    const { error: dbErr } = await createClient()
+      .from("profiles")
+      .update({ founding_member: value })
+      .eq("id", selected.id);
+    setBusy(false);
+    if (dbErr) return setError(dbErr.message.toLowerCase());
+    setDone(`@${selected.username} ${value ? "is now a founding member" : "is no longer a founding member"}`);
+    router.refresh();
+  }
+
   return (
     <section className="border-t border-hairline pt-6">
       <h2 className="mono-meta mb-3 text-white">PROFILE MODERATION</h2>
@@ -50,6 +64,20 @@ export default function ProfileModeration() {
           <Link href={`/${selected.username}`} className="lowercase text-muted underline">
             view profile
           </Link>
+          <button
+            onClick={() => setFounding(true)}
+            disabled={busy}
+            className="lowercase text-muted hover:text-white disabled:opacity-50"
+          >
+            grant founding
+          </button>
+          <button
+            onClick={() => setFounding(false)}
+            disabled={busy}
+            className="lowercase text-muted hover:text-white disabled:opacity-50"
+          >
+            revoke founding
+          </button>
           <button
             onClick={deleteProfile}
             disabled={busy}

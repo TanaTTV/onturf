@@ -30,8 +30,7 @@ export type Profile = {
   open_to_work: boolean;
   links: ProfileLinks;
   is_admin: boolean;
-  /** not in the schema yet (phase-4 founding-member badge) — cards render it when present */
-  founding_member?: boolean;
+  founding_member: boolean;
   created_at: string;
   updated_at: string;
 };
