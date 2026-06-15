@@ -109,3 +109,14 @@ export type ProfileEmbed = {
   embed_url: string;
   sort_order: number;
 };
+
+export type InviteCode = {
+  code: string;
+  label: string | null;
+  max_uses: number;
+  uses: number;
+  expires_at: string | null;
+  active: boolean;
+  created_by: string | null;
+  created_at: string;
+};
