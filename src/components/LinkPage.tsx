@@ -8,6 +8,17 @@ import type { LinkPageConfig, LinkPageItem, Profile } from "@/lib/types";
 
 const WHITE = "#f4f4f2";
 
+/** Only allow http(s) links as hrefs — blocks stored javascript:/data: XSS. */
+function safeHref(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  try {
+    const u = new URL(raw.trim());
+    return u.protocol === "http:" || u.protocol === "https:" ? u.href : null;
+  } catch {
+    return null;
+  }
+}
+
 type LinkPageProfile = Pick<
   Profile,
   "display_name" | "username" | "avatar_url" | "city" | "links"
@@ -32,7 +43,10 @@ export default function LinkPage({
   const socials: LinkPageItem[] = Object.entries(profile.links ?? {})
     .filter(([, v]) => v)
     .map(([k, v]) => ({ label: k, url: v as string }));
-  const items: LinkPageItem[] = [...config.links, ...socials];
+  // sanitize every url before it becomes a clickable href (blocks javascript:/data:)
+  const items = [...config.links, ...socials]
+    .map((it) => ({ label: it.label, href: safeHref(it.url) }))
+    .filter((it): it is { label: string; href: string } => !!it.href);
 
   const positionClass =
     mode === "page" ? "fixed inset-0 z-[60]" : "absolute inset-0";
@@ -105,7 +119,7 @@ export default function LinkPage({
             items.map((item, i) => (
               <a
                 key={`${item.label}-${i}`}
-                href={item.url}
+                href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="lp-btn w-full px-5 py-3.5 text-sm font-bold lowercase transition-colors"
