@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Archivo_Black, IBM_Plex_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/constants";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({
             ONTURF — ALBUQUERQUE NM — FIND SHOWS — GET FOUND
           </p>
         </footer>
+        <FeedbackWidget />
       </body>
     </html>
   );

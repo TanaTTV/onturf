@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PendingShowCard from "./PendingShowCard";
 import ProfileModeration from "./ProfileModeration";
+import FeedbackInbox from "./FeedbackInbox";
 import type { ShowWithVenue } from "@/lib/types";
 
 export const metadata: Metadata = { title: "admin" };
@@ -49,6 +50,8 @@ export default async function AdminPage() {
       </section>
 
       <ProfileModeration />
+
+      <FeedbackInbox />
     </div>
   );
 }

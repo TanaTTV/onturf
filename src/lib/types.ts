@@ -91,3 +91,12 @@ export type ProfileEmbed = {
   embed_url: string;
   sort_order: number;
 };
+
+export type Feedback = {
+  id: string;
+  user_id: string | null;
+  message: string;
+  path: string | null;
+  created_at: string;
+  author?: Pick<Profile, "username" | "display_name"> | null;
+};
