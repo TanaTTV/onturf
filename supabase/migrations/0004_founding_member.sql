@@ -6,6 +6,8 @@ alter table profiles
 
 -- Auto-grant founding status to the first 100 profiles created. After that,
 -- new profiles are not founding members (admins can still grant manually).
+-- The value is FORCED here (not just defaulted) so a user can't self-grant it
+-- by passing founding_member = true in their own insert.
 create or replace function grant_founding_member()
 returns trigger
 language plpgsql
@@ -13,9 +15,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if (select count(*) from profiles) < 100 then
-    new.founding_member := true;
-  end if;
+  new.founding_member := (select count(*) from profiles) < 100;
   return new;
 end;
 $$;
