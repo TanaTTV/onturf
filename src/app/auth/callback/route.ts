@@ -22,7 +22,11 @@ export async function GET(request: Request) {
           .select("id")
           .eq("id", user.id)
           .maybeSingle();
-        if (!profile) return NextResponse.redirect(`${origin}/onboarding`);
+        if (!profile) {
+          // keep an invite code if it was carried in `next`, else plain onboarding
+          const dest = next.startsWith("/onboarding") ? next : "/onboarding";
+          return NextResponse.redirect(`${origin}${dest}`);
+        }
       }
       return NextResponse.redirect(`${origin}${next}`);
     }

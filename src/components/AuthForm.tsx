@@ -8,7 +8,9 @@ import { createClient } from "@/lib/supabase/client";
 export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? (mode === "signup" ? "/onboarding" : "/");
+  const invite = searchParams.get("invite");
+  const onboardingNext = `/onboarding${invite ? `?invite=${encodeURIComponent(invite)}` : ""}`;
+  const next = searchParams.get("next") ?? (mode === "signup" ? onboardingNext : "/");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -26,13 +28,15 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+            onboardingNext
+          )}`,
         },
       });
       setBusy(false);
       if (error) return setError(error.message.toLowerCase());
       if (data.session) {
-        router.push("/onboarding");
+        router.push(onboardingNext);
         router.refresh();
       } else {
         setNotice("check your email to confirm your account.");
@@ -53,7 +57,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
-          mode === "signup" ? "/onboarding" : next
+          mode === "signup" ? onboardingNext : next
         )}`,
       },
     });

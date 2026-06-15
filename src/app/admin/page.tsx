@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PendingShowCard from "./PendingShowCard";
 import ProfileModeration from "./ProfileModeration";
-import type { ShowWithVenue } from "@/lib/types";
+import InviteCodesManager from "./InviteCodesManager";
+import type { InviteCode, ShowWithVenue } from "@/lib/types";
 
 export const metadata: Metadata = { title: "admin" };
 
@@ -21,11 +22,17 @@ export default async function AdminPage() {
     .maybeSingle();
   if (!me?.is_admin) redirect("/");
 
-  const { data: pending } = await supabase
-    .from("shows")
-    .select("*, venues(name, address, all_ages)")
-    .eq("status", "pending")
-    .order("created_at", { ascending: true });
+  const [{ data: pending }, { data: invites }] = await Promise.all([
+    supabase
+      .from("shows")
+      .select("*, venues(name, address, all_ages)")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("invite_codes")
+      .select("*")
+      .order("created_at", { ascending: false }),
+  ]);
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-col gap-8">
@@ -47,6 +54,8 @@ export default async function AdminPage() {
           </p>
         )}
       </section>
+
+      <InviteCodesManager codes={(invites ?? []) as InviteCode[]} />
 
       <ProfileModeration />
     </div>
