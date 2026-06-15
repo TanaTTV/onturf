@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import SettingsForm from "./SettingsForm";
 import EmbedsManager from "./EmbedsManager";
 import CreditsManager from "./CreditsManager";
+import LinkPageManager from "./LinkPageManager";
 import AccountSection from "./AccountSection";
 import type { Credit, Profile, ProfileEmbed } from "@/lib/types";
 
@@ -41,6 +42,7 @@ export default async function SettingsPage() {
       <h1 className="wordmark pt-10 text-5xl text-white sm:text-6xl">settings</h1>
       <SettingsForm profile={profile as Profile} />
       <EmbedsManager embeds={(embeds ?? []) as ProfileEmbed[]} userId={user.id} />
+      <LinkPageManager profile={profile as Profile} />
       <CreditsManager
         credits={(credits ?? []) as (Credit & { credited: { username: string; display_name: string } | null })[]}
         userId={user.id}

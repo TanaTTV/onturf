@@ -18,6 +18,23 @@ export type ProfileLinks = {
   twitch?: string;
 };
 
+export type LinkPageItem = {
+  label: string;
+  url: string;
+};
+
+/** How the avatar is used as the page backdrop. "off" = use the solid bg color. */
+export type AvatarBg = "off" | "blur" | "pixelate";
+
+/** Config for the /l/<username> Linktree-style page (stored as the link_page jsonb). */
+export type LinkPageConfig = {
+  enabled: boolean;
+  bg_color: string; // palette key, see LINK_PAGE_COLORS
+  avatar_bg: AvatarBg;
+  effect: string; // overlay effect key, see LINK_PAGE_EFFECTS
+  links: LinkPageItem[];
+};
+
 export type Profile = {
   id: string;
   username: string;
@@ -29,6 +46,7 @@ export type Profile = {
   genres: string[];
   open_to_work: boolean;
   links: ProfileLinks;
+  link_page: LinkPageConfig | Record<string, never>;
   is_admin: boolean;
   /** not in the schema yet (phase-4 founding-member badge) — cards render it when present */
   founding_member?: boolean;

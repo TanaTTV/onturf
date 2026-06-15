@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .eq("status", "approved")
         .gte("starts_at", new Date().toISOString())
         .limit(500),
-      supabase.from("profiles").select("username, updated_at").limit(1000),
+      supabase.from("profiles").select("username, updated_at, link_page").limit(1000),
     ]);
 
     return [
@@ -39,6 +39,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: p.updated_at,
         priority: 0.6,
       })),
+      // live link pages only
+      ...(profiles ?? [])
+        .filter((p) => (p.link_page as { enabled?: boolean } | null)?.enabled)
+        .map((p) => ({
+          url: `${SITE_URL}/l/${p.username}`,
+          lastModified: p.updated_at,
+          priority: 0.5,
+        })),
     ];
   } catch {
     return staticPages;

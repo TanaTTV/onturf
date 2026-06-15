@@ -7,7 +7,7 @@ import GhostWordmark from "@/components/GhostWordmark";
 import EmbedPlayer from "@/components/EmbedPlayer";
 import ConfirmCreditButton from "@/components/ConfirmCreditButton";
 import ShareCardButton from "@/components/ShareCardButton";
-import { ROLE_LABELS, SITE_URL } from "@/lib/constants";
+import { ROLE_LABELS, SITE_URL, resolveLinkPage } from "@/lib/constants";
 import type {
   Credit,
   Profile,
@@ -89,6 +89,8 @@ export default async function ProfilePage({ params }: Props) {
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 
   const links = Object.entries(profile.links ?? {}).filter(([, v]) => v);
+  const linkPage = resolveLinkPage(profile.link_page);
+  const showLinkPage = linkPage.enabled || isOwner;
 
   return (
     <>
@@ -137,6 +139,11 @@ export default async function ProfilePage({ params }: Props) {
             {isOwner && (
               <Link href="/settings" className="btn-text py-1 text-muted">
                 edit profile
+              </Link>
+            )}
+            {showLinkPage && (
+              <Link href={`/l/${profile.username}`} className="btn-text py-1 text-muted">
+                link page{!linkPage.enabled && isOwner ? " (draft)" : ""} ↗
               </Link>
             )}
             <ShareCardButton
