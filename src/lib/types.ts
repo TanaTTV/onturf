@@ -48,8 +48,7 @@ export type Profile = {
   links: ProfileLinks;
   link_page: LinkPageConfig | Record<string, never>;
   is_admin: boolean;
-  /** not in the schema yet (phase-4 founding-member badge) — cards render it when present */
-  founding_member?: boolean;
+  founding_member: boolean;
   created_at: string;
   updated_at: string;
 };

@@ -116,6 +116,11 @@ export default async function ProfilePage({ params }: Props) {
           <h1 className="wordmark mt-4 break-words text-[clamp(2.5rem,11vw,5rem)] text-white">
             {profile.display_name}
           </h1>
+          {profile.founding_member && (
+            <p className="mono-meta-xs mt-3 inline-flex items-center gap-1.5 border border-bone/40 px-2 py-1 text-bone">
+              ★ founding member
+            </p>
+          )}
           <p className="mono-meta mt-4 flex flex-wrap items-center gap-x-2 text-muted">
             {profile.roles.map((r) => ROLE_LABELS[r]).join(" / ")}
             {profile.open_to_work && (
