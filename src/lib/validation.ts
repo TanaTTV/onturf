@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { GENRES, LINK_KEYS } from "./constants";
+import {
+  GENRES,
+  LINK_KEYS,
+  LINK_PAGE_COLORS,
+  LINK_PAGE_EFFECT_KEYS,
+  MAX_LINK_PAGE_LINKS,
+} from "./constants";
 
 export const usernameSchema = z
   .string()
@@ -66,3 +72,20 @@ export const embedSchema = z.object({
 });
 
 export type EmbedFormValues = z.infer<typeof embedSchema>;
+
+export const linkPageItemSchema = z.object({
+  label: z.string().trim().min(1, "label required").max(40, "max 40 characters"),
+  url: z.string().trim().url("must be a valid url (include https://)"),
+});
+
+export const linkPageSchema = z.object({
+  enabled: z.boolean(),
+  bg_color: z.enum(
+    LINK_PAGE_COLORS.map((c) => c.key) as [string, ...string[]]
+  ),
+  avatar_bg: z.enum(["off", "blur", "pixelate"]),
+  effect: z.enum(LINK_PAGE_EFFECT_KEYS as [string, ...string[]]),
+  links: z.array(linkPageItemSchema).max(MAX_LINK_PAGE_LINKS, "too many links"),
+});
+
+export type LinkPageFormValues = z.infer<typeof linkPageSchema>;

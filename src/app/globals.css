@@ -164,11 +164,47 @@ body::after {
   animation: marquee-scroll 40s linear infinite;
 }
 
+/* link page (/l/<username>) overlay effects — background layer only */
+@keyframes lp-aurora-drift {
+  0% {
+    transform: translate3d(-12%, -8%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(12%, 10%, 0) scale(1.3);
+  }
+  100% {
+    transform: translate3d(-12%, -8%, 0) scale(1.1);
+  }
+}
+@keyframes lp-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.25);
+  }
+}
+.lp-aurora-layer {
+  animation: lp-aurora-drift 18s ease-in-out infinite;
+  will-change: transform;
+}
+.lp-pulse-layer {
+  animation: lp-pulse 6s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee > div {
     animation: none;
   }
   .title-giant {
+    animation: none;
+  }
+  .lp-aurora-layer,
+  .lp-pulse-layer {
     animation: none;
   }
 }
