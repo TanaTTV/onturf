@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import ShareCardButton from "@/components/ShareCardButton";
 import RsvpButton from "@/components/RsvpButton";
 import { ROLE_LABELS, SITE_URL } from "@/lib/constants";
-import { formatShowDate, formatShowTime, venueLabel } from "@/lib/utils";
+import { formatShowDate, formatShowTime, safeExternalUrl, venueLabel } from "@/lib/utils";
 import type { LineupEntry, ShowWithVenue } from "@/lib/types";
 
 type Props = { params: { id: string } };
@@ -147,9 +147,9 @@ export default async function ShowDetailPage({ params }: Props) {
           />
         </div>
 
-        {show.ticket_url && (
+        {safeExternalUrl(show.ticket_url) && (
           <a
-            href={show.ticket_url}
+            href={safeExternalUrl(show.ticket_url)!}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary mt-8"

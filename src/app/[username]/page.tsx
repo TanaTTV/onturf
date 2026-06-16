@@ -9,6 +9,7 @@ import ConfirmCreditButton from "@/components/ConfirmCreditButton";
 import ShareCardButton from "@/components/ShareCardButton";
 import FollowButton from "@/components/FollowButton";
 import { ROLE_LABELS, SITE_URL, resolveLinkPage } from "@/lib/constants";
+import { safeExternalUrl } from "@/lib/utils";
 import type {
   Credit,
   Profile,
@@ -59,31 +60,31 @@ export default async function ProfilePage({ params }: Props) {
   } = await supabase.auth.getUser();
   const isOwner = user?.id === profile.id;
 
-  const [{ data: embeds }, { data: credits }, { data: lineup }] = await Promise.all([
-    supabase
-      .from("profile_embeds")
-      .select("*")
-      .eq("profile_id", profile.id)
-      .order("sort_order"),
-    supabase
-      .from("credits")
-      .select("*, credited:profiles!credits_credited_id_fkey(username, display_name)")
-      .eq("owner_id", profile.id)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("show_lineup")
-      .select("show_id, shows!inner(*, venues(name, address, all_ages))")
-      .eq("profile_id", profile.id)
-      .eq("shows.status", "approved")
-      .gte("shows.starts_at", new Date().toISOString()),
-  ]);
-
-  // credits where this profile is the credited party (shown as "credited on")
-  const { data: creditedOn } = await supabase
-    .from("credits")
-    .select("*, owner:profiles!credits_owner_id_fkey(username, display_name)")
-    .eq("credited_id", profile.id)
-    .order("created_at", { ascending: false });
+  const [{ data: embeds }, { data: credits }, { data: lineup }, { data: creditedOn }] =
+    await Promise.all([
+      supabase
+        .from("profile_embeds")
+        .select("*")
+        .eq("profile_id", profile.id)
+        .order("sort_order"),
+      supabase
+        .from("credits")
+        .select("*, credited:profiles!credits_credited_id_fkey(username, display_name)")
+        .eq("owner_id", profile.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("show_lineup")
+        .select("show_id, shows!inner(*, venues(name, address, all_ages))")
+        .eq("profile_id", profile.id)
+        .eq("shows.status", "approved")
+        .gte("shows.starts_at", new Date().toISOString()),
+      // credits where this profile is the credited party (shown as "credited on")
+      supabase
+        .from("credits")
+        .select("*, owner:profiles!credits_owner_id_fkey(username, display_name)")
+        .eq("credited_id", profile.id)
+        .order("created_at", { ascending: false }),
+    ]);
 
   const upcomingShows = ((lineup ?? []) as unknown as { shows: ShowWithVenue }[])
     .map((l) => l.shows)
@@ -203,17 +204,21 @@ export default async function ProfilePage({ params }: Props) {
           <section>
             <h2 className="mono-meta mb-4 text-white">LINKS</h2>
             <div className="flex flex-wrap gap-x-8 gap-y-3">
-              {links.map(([key, url]) => (
-                <a
-                  key={key}
-                  href={url as string}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-text py-1"
-                >
-                  {key} ↗
-                </a>
-              ))}
+              {links.map(([key, url]) => {
+                const href = safeExternalUrl(url);
+                if (!href) return null;
+                return (
+                  <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-text py-1"
+                  >
+                    {key} ↗
+                  </a>
+                );
+              })}
             </div>
           </section>
         )}
@@ -248,8 +253,8 @@ export default async function ProfilePage({ params }: Props) {
               {((credits ?? []) as unknown as CreditWithProfile[]).map((c) => (
                 <div key={c.id} className="border-t border-hairline py-3 text-sm">
                   <p className="font-bold text-white">
-                    {c.work_url ? (
-                      <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
+                    {safeExternalUrl(c.work_url) ? (
+                      <a href={safeExternalUrl(c.work_url)!} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
                         {c.work_title}
                       </a>
                     ) : (
@@ -276,8 +281,8 @@ export default async function ProfilePage({ params }: Props) {
               ).map((c) => (
                 <div key={c.id} className="border-t border-hairline py-3 text-sm">
                   <p className="font-bold text-white">
-                    {c.work_url ? (
-                      <a href={c.work_url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
+                    {safeExternalUrl(c.work_url) ? (
+                      <a href={safeExternalUrl(c.work_url)!} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
                         {c.work_title}
                       </a>
                     ) : (
