@@ -33,9 +33,27 @@ export const metadata: Metadata = {
   },
   description:
     "The Albuquerque music scene in one place: local shows, artists, producers, engineers, and venues. Find shows. Get found.",
+  keywords: [
+    "albuquerque music",
+    "abq shows",
+    "new mexico music",
+    "local artists",
+    "live music calendar",
+    "505",
+  ],
   openGraph: {
     siteName: SITE_NAME,
     type: "website",
+    url: SITE_URL,
+    title: `${SITE_NAME} — ${TAGLINE}`,
+    description:
+      "Local shows, artists, producers, engineers, and venues — all in one place.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${TAGLINE}`,
+    description:
+      "The Albuquerque music scene in one place. Find shows. Get found.",
   },
 };
 
@@ -51,10 +69,13 @@ export default function RootLayout({
         <main className="mx-auto min-h-[80vh] w-full max-w-6xl px-4 pb-24 pt-6 sm:px-6">
           {children}
         </main>
-        <footer className="border-t border-hairline px-4 py-6 sm:px-6">
+        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-hairline px-4 py-6 sm:px-6">
           <p className="mono-meta-xs text-muted">
             ONTURF — ALBUQUERQUE NM — FIND SHOWS — GET FOUND
           </p>
+          <a href="/privacy" className="mono-meta-xs text-muted underline-offset-4 hover:text-white hover:underline">
+            PRIVACY
+          </a>
         </footer>
         <FeedbackWidget />
       </body>
