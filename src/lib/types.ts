@@ -119,3 +119,12 @@ export type InviteCode = {
   created_by: string | null;
   created_at: string;
 };
+
+export type Feedback = {
+  id: string;
+  user_id: string | null;
+  message: string;
+  path: string | null;
+  created_at: string;
+  author?: Pick<Profile, "username" | "display_name"> | null;
+};

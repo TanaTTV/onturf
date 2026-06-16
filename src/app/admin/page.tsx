@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import PendingShowCard from "./PendingShowCard";
 import ProfileModeration from "./ProfileModeration";
 import InviteCodesManager from "./InviteCodesManager";
+import FeedbackInbox from "./FeedbackInbox";
 import type { InviteCode, ShowWithVenue } from "@/lib/types";
 
 export const metadata: Metadata = { title: "admin" };
@@ -58,6 +59,8 @@ export default async function AdminPage() {
       <InviteCodesManager codes={(invites ?? []) as InviteCode[]} />
 
       <ProfileModeration />
+
+      <FeedbackInbox />
     </div>
   );
 }
