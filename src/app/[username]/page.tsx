@@ -7,6 +7,7 @@ import GhostWordmark from "@/components/GhostWordmark";
 import EmbedPlayer from "@/components/EmbedPlayer";
 import ConfirmCreditButton from "@/components/ConfirmCreditButton";
 import ShareCardButton from "@/components/ShareCardButton";
+import FollowButton from "@/components/FollowButton";
 import { ROLE_LABELS, SITE_URL, resolveLinkPage } from "@/lib/constants";
 import type {
   Credit,
@@ -88,6 +89,22 @@ export default async function ProfilePage({ params }: Props) {
     .map((l) => l.shows)
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 
+  const [{ count: followerCount }, { count: followingCount }] = await Promise.all([
+    supabase.from("follows").select("*", { count: "exact", head: true }).eq("following_id", profile.id),
+    supabase.from("follows").select("*", { count: "exact", head: true }).eq("follower_id", profile.id),
+  ]);
+
+  let isFollowing = false;
+  if (user && !isOwner) {
+    const { data: f } = await supabase
+      .from("follows")
+      .select("follower_id")
+      .eq("follower_id", user.id)
+      .eq("following_id", profile.id)
+      .maybeSingle();
+    isFollowing = !!f;
+  }
+
   const links = Object.entries(profile.links ?? {}).filter(([, v]) => v);
   const linkPage = resolveLinkPage(profile.link_page);
   const showLinkPage = linkPage.enabled || isOwner;
@@ -133,6 +150,9 @@ export default async function ProfilePage({ params }: Props) {
           {profile.genres.length > 0 && (
             <p className="mono-meta-xs mt-1.5 text-muted">{profile.genres.join(" / ")}</p>
           )}
+          <p className="mono-meta-xs mt-1.5 text-muted">
+            {followerCount ?? 0} followers · {followingCount ?? 0} following
+          </p>
 
           {profile.bio && (
             <p className="mt-8 max-w-prose whitespace-pre-line text-sm text-white">
@@ -150,6 +170,15 @@ export default async function ProfilePage({ params }: Props) {
               <Link href={`/l/${profile.username}`} className="btn-text py-1 text-muted">
                 link page{!linkPage.enabled && isOwner ? " (draft)" : ""} ↗
               </Link>
+            )}
+            {!isOwner && (
+              <FollowButton
+                targetId={profile.id}
+                targetUsername={profile.username}
+                userId={user?.id ?? null}
+                initialFollowing={isFollowing}
+                initialFollowers={followerCount ?? 0}
+              />
             )}
             <ShareCardButton
               kind="profile"

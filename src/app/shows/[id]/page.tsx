@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ShareCardButton from "@/components/ShareCardButton";
+import RsvpButton from "@/components/RsvpButton";
 import { ROLE_LABELS, SITE_URL } from "@/lib/constants";
 import { formatShowDate, formatShowTime, venueLabel } from "@/lib/utils";
 import type { LineupEntry, ShowWithVenue } from "@/lib/types";
@@ -40,11 +41,32 @@ export default async function ShowDetailPage({ params }: Props) {
   if (!show) notFound();
 
   const supabase = createClient();
-  const { data: lineup } = await supabase
-    .from("show_lineup")
-    .select("billing_order, profiles(id, username, display_name, avatar_url, roles)")
-    .eq("show_id", show.id)
-    .order("billing_order");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [{ data: lineup }, { count: rsvpCount }] = await Promise.all([
+    supabase
+      .from("show_lineup")
+      .select("billing_order, profiles(id, username, display_name, avatar_url, roles)")
+      .eq("show_id", show.id)
+      .order("billing_order"),
+    supabase
+      .from("show_rsvps")
+      .select("*", { count: "exact", head: true })
+      .eq("show_id", show.id),
+  ]);
+
+  let going = false;
+  if (user) {
+    const { data: myRsvp } = await supabase
+      .from("show_rsvps")
+      .select("show_id")
+      .eq("show_id", show.id)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    going = !!myRsvp;
+  }
 
   const isPast = new Date(show.starts_at) < new Date();
   const denverDay = (d: Date) =>
@@ -85,6 +107,21 @@ export default async function ShowDetailPage({ params }: Props) {
             .filter(Boolean)
             .join(" / ")}
         </p>
+
+        {show.status === "approved" && (
+          <div className="mt-6">
+            {isPast ? (
+              <p className="mono-meta text-muted">{rsvpCount ?? 0} went</p>
+            ) : (
+              <RsvpButton
+                showId={show.id}
+                userId={user?.id ?? null}
+                initialGoing={going}
+                initialCount={rsvpCount ?? 0}
+              />
+            )}
+          </div>
+        )}
 
         <div className="mt-4">
           <ShareCardButton
